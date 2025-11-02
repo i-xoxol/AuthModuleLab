@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Development Lab (CY-410) - Detailed Instructions</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        details {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f4f4f4;
+        }
+        .code-snippet {
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Secure Development Lab (CY-410) - Detailed Instructions</h1>
+        <h2>Software and System Security - Sacred Heart University, Fairfield, CT</h2>
+
+        <div style="text-align: left;">
+            <h2>Introduction</h2>
+            <p>
+                Welcome to the Secure Development Lab! This lab is designed to provide you with a deep dive into the principles of building a secure web application with a focus on authentication. You will explore the principles of secure software development, understand the importance of unit testing in minimizing vulnerabilities, and learn about the architecture of a secure authentication module.
+            </p>
+
+            <h2>Learning Objectives</h2>
+            <ul>
+                <li>Understand the core principles of secure software development.</li>
+                <li>Learn how to design and implement a secure authentication module.</li>
+                <li>Appreciate the role of unit tests in identifying and mitigating security risks.</li>
+                <li>Understand how different components of an application work together to provide a secure user experience.</li>
+                <li>Apply the concepts of the CIA triad (Confidentiality, Integrity, Availability) to a real-world application.</li>
+            </ul>
+
+            <h2>Lab Architecture</h2>
+            <p>
+                This lab is composed of several components that work together to provide a secure authentication system. Understanding the role of each component is crucial for understanding the overall security of the application.
+            </p>
+
+            <h3>Back-End Components (Python)</h3>
+            <ul>
+                <li>
+                    <strong>`api.py`:</strong> This is the main entry point of our web application. It uses the Flask framework to create a web server and define the API endpoints for handling login, registration, logout, and profile access. It also manages user sessions.
+                </li>
+                <li>
+                    <strong>`auth.py`:</strong> This module contains the core authentication logic. It provides functions for hashing passwords, comparing passwords, and managing user data in the `usersdb.json` file. This separation of concerns is important for maintainability and security.
+                </li>
+                <li>
+                    <strong>`user.py`:</strong> This module defines the `User` class, which represents a user in our system. It is a simple data structure that holds the username, hashed password, and salt.
+                </li>
+                <li>
+                    <strong>`user_registration.py`:</strong> This module handles the user registration process. It uses functions from `auth.py` to create new users and save them to the database.
+                </li>
+                <li>
+                    <strong>`usersdb.json`:</strong> This is a simple JSON file that acts as our user database. In a real-world application, you would use a more robust database system like PostgreSQL or MySQL.
+                </li>
+            </ul>
+
+            <h2>Deep Dive into the `auth` module</h2>
+            <p>
+                The `auth.py` module is the heart of our authentication system. Let's take a closer look at each function in this module.
+            </p>
+
+            <details>
+                <summary><code>get_salt(length)</code></summary>
+                <p>
+                    <strong>Purpose:</strong> This function generates a random salt of a specified length. A salt is a random string of data that is added to a password before it is hashed. Using a salt makes it much harder for attackers to use pre-computed tables of hashes (rainbow tables) to crack passwords.
+                </p>
+                <p>
+                    <strong>CIA Triad:</strong> This function directly contributes to <strong>Confidentiality</strong> by making it more difficult for attackers to gain access to user passwords.
+                </p>
+            </details>
+
+            <details>
+                <summary><code>get_hash(input_string)</code></summary>
+                <p>
+                    <strong>Purpose:</strong> This function hashes a string using the SHA-256 algorithm. SHA-256 is a widely used cryptographic hash function that produces a 256-bit (32-byte) hash value. It is a one-way function, which means that it is computationally infeasible to reverse the process and find the original input string from the hash.
+                </p>
+                <p>
+                    <strong>CIA Triad:</strong> This function is essential for <strong>Confidentiality</strong>. By storing hashed passwords instead of plain-text passwords, we can protect user data even if our database is compromised.
+                </p>
+            </details>
+
+            <details>
+                <summary><code>bytes_to_hex(byte_array)</code></summary>
+                <p>
+                    <strong>Purpose:</strong> This function converts a byte array to a hexadecimal string. This is a helper function that is used to convert the salt (which is generated as a byte array) to a string so that it can be stored in the JSON database.
+                </p>
+            </details>
+
+            <details>
+                <summary><code>user_to_json(user)</code> and <code>json_to_user(json_string)</code></summary>
+                <p>
+                    <strong>Purpose:</strong> These functions are used to convert a `User` object to a JSON string and vice versa. This is necessary for storing and retrieving user data from the `usersdb.json` file.
+                </p>
+            </details>
+
+            <details>
+                <summary><code>find_user(user_list, username)</code></summary>
+                <p>
+                    <strong>Purpose:</strong> This function finds a user in a list of users by their username. It performs a case-insensitive search to improve usability.
+                </p>
+            </details>
+
+            <details>
+                <summary><code>save_users(user_list, filepath)</code> and <code>load_users(filepath)</code></summary>
+                <p>
+                    <strong>Purpose:</strong> These functions are responsible for saving and loading the list of users to and from the `usersdb.json` file. The `load_users` function also includes error handling to gracefully handle cases where the file does not exist or is corrupted.
+                </p>
+                <p>
+                    <strong>CIA Triad:</strong> These functions are important for <strong>Availability</strong>. By ensuring that user data can be reliably saved and loaded, we can ensure that the authentication system is always available.
+                </p>
+            </details>
+
+            <h2>The Importance of Unit Testing</h2>
+            <p>
+                Unit testing is a crucial part of secure software development. It involves writing small, automated tests for individual units of code (such as functions or methods) to verify that they behave as expected. By writing comprehensive unit tests, we can:
+            </p>
+            <ul>
+                <li><strong>Identify and fix bugs early:</strong> Unit tests can help us to catch bugs and errors early in the development process, when they are easier and cheaper to fix.</li>
+                <li><strong>Prevent regressions:</strong> As we add new features or modify existing code, unit tests can help us to ensure that we have not introduced any new bugs or broken any existing functionality.</li>
+                <li><strong>Improve code quality:</strong> Writing unit tests forces us to think more carefully about the design of our code and to write code that is more modular, testable, and maintainable.</li>
+                <li><strong>Enhance security:</strong> By testing for edge cases and unexpected inputs, unit tests can help us to identify and mitigate potential security vulnerabilities.
+            </ul>
+
+            <h3>Deep Dive into the Unit Tests</h3>
+            <p>
+                Let's take a closer look at some of the unit tests in this lab.
+            </p>
+
+            <details>
+                <summary><code>test_get_salt()</code> in <code>test_auth.py</code></summary>
+                <p>
+                    <strong>Purpose:</strong> This test verifies that the `get_salt` function generates a random salt of the correct length and that two generated salts are not the same. This is important for ensuring the randomness and uniqueness of the salts, which is crucial for the security of the password hashing mechanism.
+                </p>
+            </details>
+
+            <details>
+                <summary><code>test_get_hash()</code> in <code>test_auth.py</code></summary>
+                <p>
+                    <strong>Purpose:</strong> This test verifies that the `get_hash` function correctly hashes a string using the SHA-256 algorithm. It does this by comparing the output of the function with a known, pre-computed hash value. This ensures the <strong>Integrity</strong> of our hashing implementation.
+                </p>
+            </details>
+
+            <details>
+                <summary><code>test_find_user()</code> in <code>test_auth.py</code></summary>
+                <p>
+                    <strong>Purpose:</strong> This test verifies that the `find_user` function can correctly find a user in a list of users. It also tests the case where the user is not found. This is important for ensuring that the login functionality works correctly.
+                </p>
+            </details>
+
+            <details>
+                <summary><code>test_save_load_users()</code> in <code>test_auth.py</code></summary>
+                <p>
+                    <strong>Purpose:</strong> This test verifies that the `save_users` and `load_users` functions can correctly save and load a list of users to and from a JSON file. This ensures the <strong>Availability</strong> of the user data.
+                </p>
+            </details>
+
+            <details>
+                <summary><code>test_register_user_new()</code> and <code>test_register_user_existing()</code> in <code>test_user_registration.py</code></summary>
+                <p>
+                    <strong>Purpose:</strong> These tests verify that the `register_user` function can correctly register a new user and that it prevents the registration of a user with a username that already exists. This is important for maintaining the <strong>Integrity</strong> of the user database.
+                </p>
+            </details>
+
+            <h2>Your Task</h2>
+            <p>
+                Your task in this lab is to explore the provided code, run the application and the tests, and understand how the different components work together to create a secure authentication system. You can use this detailed instruction file to guide you through the process.
+            </p>
+
+            <h2>Conclusion</h2>
+            <p>
+                Congratulations on completing the Secure Development Lab! You have gained a deep understanding of how to build a secure authentication module, how to use unit tests to verify your code, and how to apply the principles of the CIA triad to a real-world application.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
