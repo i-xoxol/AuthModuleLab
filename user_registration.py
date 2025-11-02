@@ -16,9 +16,9 @@ def create_user(username, password):
     return User(username, hashed_pass, salt)
 
 # Register a new user.
-def register_user(username, password):
+def register_user(username, password, filepath='usersdb.json'):
     # Load the list of existing users from the database file.
-    users = load_users('usersdb.json')
+    users = load_users(filepath)
     # Check if a user with the same username already exists.
     if find_user(users, username):
         return False  # User already exists
@@ -28,6 +28,6 @@ def register_user(username, password):
     # Add the new user to the list.
     users.append(new_user)
     # Save the updated list of users to the database file.
-    save_users(users, 'usersdb.json')
+    save_users(users, filepath)
     # Return True to indicate successful registration.
     return True

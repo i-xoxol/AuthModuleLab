@@ -19,6 +19,11 @@ class TestAuth(unittest.TestCase):
         hash_result = get_hash(test_string)
         self.assertEqual(hash_result, test_hash)
 
+    def test_bytes_to_hex(self):
+        byte_array = b'\x01\x02\x03'
+        hex_string = bytes_to_hex(byte_array)
+        self.assertEqual(hex_string, "010203")
+
     def test_json_to_user(self):
         json_string = '{"username": "user1", "hpass": "password", "salt": "somesalt"}'
         user = User("user1", "password", "somesalt")
@@ -43,6 +48,11 @@ class TestAuth(unittest.TestCase):
         not_found_user = find_user(users, "user4")
         self.assertIsNone(not_found_user)
 
+    def test_find_user_empty_list(self):
+        users = []
+        not_found_user = find_user(users, "user1")
+        self.assertIsNone(not_found_user)
+
     def test_save_load_users(self):
         users_to_save = [
             User("user1", "pass1", "salt1"),
@@ -55,6 +65,26 @@ class TestAuth(unittest.TestCase):
         self.assertEqual(len(users_to_save), len(loaded_users))
         for i in range(len(users_to_save)):
             self.assertEqual(users_to_save[i], loaded_users[i])
+        os.remove(filepath)
+
+    def test_load_users_non_existent_file(self):
+        loaded_users = load_users("non_existent_file.json")
+        self.assertEqual(loaded_users, [])
+
+    def test_load_users_empty_file(self):
+        filepath = "empty_file.json"
+        with open(filepath, 'w') as f:
+            f.write("")
+        loaded_users = load_users(filepath)
+        self.assertEqual(loaded_users, [])
+        os.remove(filepath)
+
+    def test_load_users_corrupted_file(self):
+        filepath = "corrupted_file.json"
+        with open(filepath, 'w') as f:
+            f.write("this is not json")
+        loaded_users = load_users(filepath)
+        self.assertEqual(loaded_users, [])
         os.remove(filepath)
 
 if __name__ == '__main__':
