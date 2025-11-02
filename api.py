@@ -1,9 +1,8 @@
 
 from flask import Flask, request, jsonify, send_from_directory
-from auth import Auth
+import auth
 
 app = Flask(__name__)
-auth_system = Auth()
 
 @app.route('/')
 def index():
@@ -22,10 +21,16 @@ def login():
     if not username or not password:
         return jsonify({'error': 'Username and password are required'}), 400
 
-    if auth_system.login(username, password):
-        return jsonify({'message': 'Login successful'})
-    else:
-        return jsonify({'error': 'Invalid credentials'}), 401
+    users = auth.load_users('usersdb.json')
+    user = auth.find_user(users, username)
+
+    if user:
+        # Hash the provided password with the user's salt
+        password_hash = auth.get_hash(password + user.salt)
+        if password_hash == user.hpass:
+            return jsonify({'message': 'Login successful'})
+
+    return jsonify({'error': 'Invalid credentials'}), 401
 
 if __name__ == '__main__':
     app.run(debug=True)
