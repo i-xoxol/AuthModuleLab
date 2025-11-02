@@ -1,70 +1,127 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab Assignment: User Authentication</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-        }
-        h1, h2 {
-            color: #333;
-        }
-    </style>
+    <title>Secure Development Lab (CY-410)</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Lab Assignment: User Authentication</h1>
-    <p>
-        This lab is designed to help you understand the principles of user authentication in a software application. 
-        You will be working with a simple Python-based command-line application that demonstrates user registration and login functionalities.
-    </p>
-    <h2>Objectives</h2>
-    <ul>
-        <li>Understand the basic concepts of user authentication.</li>
-        <li>Learn how to implement user registration and login features.</li>
-        <li>Understand the importance of secure password handling (password hashing).</li>
-        <li>Gain experience with reading from and writing to a simple file-based database (JSON).</li>
-    </ul>
-    <h2>Instructions</h2>
-    <p>
-        You are provided with a set of Python files that make up the authentication lab. Your task is to complete the missing code in the `auth.py` file.
-    </p>
-    <ol>
-        <li>
-            <strong>Review the code:</strong> Start by reviewing the provided files:
+    <div class="container">
+        <h1>Secure Development Lab (CY-410)</h1>
+        <h2>Software and System Security - Sacred Heart University, Fairfield, CT</h2>
+
+        <div style="text-align: left;">
+            <h2>Introduction</h2>
+            <p>
+                Welcome to the Secure Development Lab! This lab is designed to provide you with hands-on experience in building a secure web application with a focus on authentication. You will explore the principles of secure software development, understand the importance of unit testing in minimizing vulnerabilities, and learn about the architecture of a secure authentication module.
+            </p>
+
+            <h2>Learning Objectives</h2>
             <ul>
-                <li><code>main.py</code>: The main entry point of the application.</li>
-                <li><code>user.py</code>: The User class representing a user.</li>
-                <li><code>user_registration.py</code>: Handles user registration.</li>
-                <li><code>auth.py</code>: <strong>This is the file you will be modifying.</strong> It contains the core authentication logic.</li>
-                <li><code>test_auth.py</code>: Contains unit tests to verify your implementation.</li>
-                <li><code>usersdb.json</code>: A simple JSON file to store user data.</li>
+                <li>Understand the core principles of secure software development.</li>
+                <li>Learn how to design and implement a secure authentication module.</li>
+                <li>Appreciate the role of unit tests in identifying and mitigating security risks.</li>
+                <li>Understand how different components of an application work together to provide a secure user experience.</li>
+                <li>Apply the concepts of the CIA triad (Confidentiality, Integrity, Availability) to a real-world application.</li>
             </ul>
-        </li>
-        <li>
-            <strong>Implement the `login` function in `auth.py`:</strong> Open the `auth.py` file and implement the `login` function. 
-            This function should take a username and password as input, and it should return `True` if the credentials are valid, and `False` otherwise.
-            You will need to:
+
+            <h2>The CIA Triad and Secure Software Development</h2>
+            <p>
+                The CIA triad is a fundamental model in information security that helps in the design and evaluation of security policies. It consists of three core principles:
+            </p>
             <ul>
-                <li>Read the user data from the `usersdb.json` file.</li>
-                <li>Find the user with the given username.</li>
-                <li>Compare the provided password with the stored hashed password.</li>
+                <li><strong>Confidentiality:</strong> Ensuring that sensitive information is not disclosed to unauthorized individuals. In this lab, confidentiality is achieved by hashing passwords and protecting user data.</li>
+                <li><strong>Integrity:</strong> Maintaining the consistency, accuracy, and trustworthiness of data over its entire lifecycle. In this lab, integrity is maintained by ensuring that only authorized users can modify their data (which is not implemented, but you can think about how you would do it) and by using cryptographic hashes to protect passwords from modification.</li>
+                <li><strong>Availability:</strong> Ensuring that information is available when it is needed. In this lab, availability is ensured by having a functional application that allows users to register, log in, and access their profiles.
             </ul>
-        </li>
-        <li>
-            <strong>Run the tests:</strong> Once you have implemented the `login` function, run the unit tests in `test_auth.py` to verify your implementation.
-        </li>
-        <li>
-            <strong>Run the application:</strong> Run the `main.py` file to test the application manually.
-        </li>
-    </ol>
-    <h2>Submission</h2>
-    <p>
-        Once you have completed the lab, submit the `auth.py` file.
-    </p>
+
+            <h2>Lab Architecture</h2>
+            <p>
+                This lab is composed of several components that work together to provide a secure authentication system. Understanding the role of each component is crucial for understanding the overall security of the application.
+            </p>
+
+            <h3>Back-End Components (Python)</h3>
+            <ul>
+                <li>
+                    <strong>`api.py`:</strong> This is the main entry point of our web application. It uses the Flask framework to create a web server and define the API endpoints for handling login, registration, logout, and profile access. It also manages user sessions.
+                </li>
+                <li>
+                    <strong>`auth.py`:</strong> This module contains the core authentication logic. It provides functions for hashing passwords, comparing passwords, and managing user data in the `usersdb.json` file. This separation of concerns is important for maintainability and security.
+                </li>
+                <li>
+                    <strong>`user.py`:</strong> This module defines the `User` class, which represents a user in our system. It is a simple data structure that holds the username, hashed password, and salt.
+                </li>
+                <li>
+                    <strong>`user_registration.py`:</strong> This module handles the user registration process. It uses functions from `auth.py` to create new users and save them to the database.
+                </li>
+                <li>
+                    <strong>`usersdb.json`:</strong> This is a simple JSON file that acts as our user database. In a real-world application, you would use a more robust database system like PostgreSQL or MySQL.
+                </li>
+            </ul>
+
+            <h3>Front-End Components (HTML/CSS/JavaScript)</h3>
+            <ul>
+                <li>
+                    <strong>`index.html`, `login.html`, `register.html`:</strong> These are the HTML files that define the structure of our web pages.
+                </li>
+                <li>
+                    <strong>`style.css`:</strong> This file contains the CSS code for styling the web pages, making them visually appealing and user-friendly.
+                </li>
+                <li>
+                    <strong>`script.js`, `register.js`:</strong> These JavaScript files contain the logic for handling user interactions on the front-end, such as form submissions and communication with the back-end API.
+                </li>
+            </ul>
+
+            <h3>Testing Components (Python)</h3>
+            <ul>
+                <li>
+                    <strong>`test_auth.py`, `test_user_registration.py`, `test_api.py`:</strong> These files contain the unit tests for our application. Unit tests are crucial for ensuring the correctness and security of our code. They help us to automatically verify that our functions and endpoints behave as expected and to catch any regressions or vulnerabilities that might be introduced during development.
+                </li>
+            </ul>
+
+            <h2>Your Task</h2>
+            <p>
+                Your task in this lab is to explore the provided code, run the application and the tests, and understand how the different components work together to create a secure authentication system. Follow these steps:
+            </p>
+            <ol>
+                <li>
+                    <strong>Review the code:</strong> Start by reviewing all the files in the project. Pay close attention to the comments in the code, as they explain the purpose of each function and component.
+                </li>
+                <li>
+                    <strong>Run the application:</strong>
+                    <ul>
+                        <li>Open your terminal and navigate to the project directory.</li>
+                        <li>Run the API using the command: `python api.py`</li>
+                        <li>Open your web browser and go to: `http://127.0.0.1:5000`</li>
+                        <li>Experiment with the application by registering a new user, logging in, accessing the profile page, and logging out.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Run the unit tests:</strong>
+                    <ul>
+                        <li>Open your terminal and navigate to the project directory.</li>
+                        <li>Run the unit tests using the command: `python -m unittest discover`</li>
+                        <li>Review the test files to understand what is being tested and how the tests are structured. Notice how the tests cover different scenarios, including valid and invalid inputs, to ensure the robustness of the application.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Answer the following questions:</strong>
+                    <ol>
+                        <li>How does the application use hashing to protect user passwords? (Confidentiality)</li>
+                        <li>How do the unit tests help to ensure the integrity of the authentication module?</li>
+                        <li>How does the session management system contribute to the security of the application?</li>
+                        <li>What are the potential security risks of using an in-memory session store in a production environment? (Availability)</li>
+                        <li>How would you improve the security of this application?</li>
+                    </ol>
+                </li>
+            </ol>
+
+            <h2>Submission</h2>
+            <p>
+                Submit a document with your answers to the questions above.
+            </p>
+        </div>
+    </div>
 </body>
 </html>
