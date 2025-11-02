@@ -188,5 +188,18 @@
             </p>
         </div>
     </div>
+    <script>
+        document.querySelectorAll('details').forEach(detail => {
+            detail.addEventListener('toggle', event => {
+                if (detail.open) {
+                    const codeSnippet = detail.querySelector('.code-snippet code');
+                    codeSnippet.classList.add('matrix-text');
+                    setTimeout(() => {
+                        codeSnippet.classList.remove('matrix-text');
+                    }, 3500);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
