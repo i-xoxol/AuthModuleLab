@@ -6,13 +6,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome!</h1>
-    <p>Please choose an option:</p>
-    <!-- Button to navigate to the login page. -->
-    <button onclick="location.href='/login.html'">Login</button>
-    <!-- Button to navigate to the registration page. -->
-    <button onclick="location.href='/register.html'">Register</button>
+    <div class="container">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="40" stroke="url(#grad1)" stroke-width="4" fill="none" />
+            <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="20" fill="url(#grad1)">Auth</text>
+        </svg>
+        <h1>Welcome!</h1>
+        <p>Please choose an option:</p>
+        <!-- Button to navigate to the login page. -->
+        <button onclick="location.href='/login.html'">Login</button>
+        <!-- Button to navigate to the registration page. -->
+        <button onclick="location.href='/register.html'">Register</button>
+    </div>
 </body>
 </html>

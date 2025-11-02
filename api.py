@@ -46,6 +46,11 @@ def script():
 def register_script():
     return send_from_directory('.', 'register.js')
 
+# Serve the CSS file
+@app.route('/style.css')
+def style():
+    return send_from_directory('.', 'style.css')
+
 # --- API Routes ---
 
 # Handle user login

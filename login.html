@@ -6,24 +6,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <!-- The login form. -->
-    <form id="loginForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Login</button>
-    </form>
-    <!-- A paragraph to display messages to the user (e.g., success or error messages). -->
-    <p id="message"></p>
+    <div class="container">
+        <h1>Login</h1>
+        <!-- The login form. -->
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit">Login</button>
+        </form>
+        <!-- A paragraph to display messages to the user (e.g., success or error messages). -->
+        <p id="message"></p>
 
-    <!-- Add a button to get the user's profile. -->
-    <button id="getProfileBtn">Get Profile</button>
-    <!-- A paragraph to display the profile information. -->
-    <p id="profile"></p>
+        <!-- Add a button to get the user's profile. -->
+        <button id="getProfileBtn">Get Profile</button>
+        <!-- A paragraph to display the profile information. -->
+        <p id="profile"></p>
+    </div>
 
     <!-- Include the JavaScript file for handling the login form submission. -->
     <script src="script.js"></script>
