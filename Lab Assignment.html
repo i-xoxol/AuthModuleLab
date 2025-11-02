@@ -179,11 +179,11 @@ python -m unittest discover
         document.querySelectorAll('details').forEach(detail => {
             detail.addEventListener('toggle', event => {
                 if (detail.open) {
-                    const codeSnippet = detail.querySelector('.code-snippet code');
-                    codeSnippet.classList.add('matrix-text');
+                    const codeSnippet = detail.querySelector('.code-snippet');
+                    codeSnippet.classList.add('code-snippet-animation');
                     setTimeout(() => {
-                        codeSnippet.classList.remove('matrix-text');
-                    }, 3500);
+                        codeSnippet.classList.remove('code-snippet-animation');
+                    }, 1000);
                 }
             });
         });
