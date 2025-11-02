@@ -105,6 +105,16 @@ def register():
         # Return an error if the username already exists
         return jsonify({'error': 'Username already exists'}), 409
 
+# Handle user logout
+@app.route('/logout', methods=['POST'])
+def logout():
+    # Get the session token from the request headers
+    token = request.headers.get('Authorization')
+    # Remove the session token from the sessions dictionary
+    if token in sessions:
+        del sessions[token]
+    return jsonify({'message': 'Logout successful'})
+
 # Protected profile endpoint
 @app.route('/profile')
 def profile():

@@ -23,9 +23,8 @@ document.getElementById('registerForm').addEventListener('submit', function(even
     // Handle the response data.
     .then(data => {
         if (data.message) {
-            // Display a success message.
-            messageElement.textContent = data.message;
-            messageElement.style.color = 'green';
+            // Redirect to the main page with a success message.
+            window.location.href = '/?registration=success';
         } else {
             // Display an error message.
             messageElement.textContent = data.error;

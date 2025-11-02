@@ -21,11 +21,20 @@
             <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="20" fill="url(#grad1)">Auth</text>
         </svg>
         <h1>Secure Development Lab (CY-410)</h1>
+        <p id="registration-success" style="color: green; display: none;">Registration successful! You can now log in.</p>
         <p>Please choose an option:</p>
         <!-- Button to navigate to the login page. -->
         <button onclick="location.href='/login.html'">Login</button>
         <!-- Button to navigate to the registration page. -->
         <button onclick="location.href='/register.html'">Register</button>
     </div>
+
+    <script>
+        // Check for the registration=success query parameter and display a success message.
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('registration') === 'success') {
+            document.getElementById('registration-success').style.display = 'block';
+        }
+    </script>
 </body>
 </html>

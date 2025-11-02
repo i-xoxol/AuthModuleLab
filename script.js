@@ -83,3 +83,42 @@ document.getElementById('getProfileBtn').addEventListener('click', function() {
         profileElement.style.color = 'red';
     });
 });
+
+// Add an event listener to the 'Logout' button.
+document.getElementById('logoutBtn').addEventListener('click', function() {
+    // Get the session token from local storage.
+    const token = localStorage.getItem('token');
+    // Get the message element to display feedback to the user.
+    const messageElement = document.getElementById('message');
+
+    // If the token is not available, do nothing.
+    if (!token) {
+        return;
+    }
+
+    // Send a POST request to the /logout endpoint with the session token in the Authorization header.
+    fetch('/logout', {
+        method: 'POST',
+        headers: {
+            'Authorization': token
+        }
+    })
+    // Parse the JSON response.
+    .then(response => response.json())
+    // Handle the response data.
+    .then(data => {
+        // Remove the session token from local storage.
+        localStorage.removeItem('token');
+        // Display a success message.
+        messageElement.textContent = data.message;
+        messageElement.style.color = 'green';
+        // Clear the profile information.
+        document.getElementById('profile').textContent = '';
+    })
+    // Handle any errors that occur during the fetch.
+    .catch(error => {
+        console.error('Error:', error);
+        messageElement.textContent = 'An error occurred. Please try again.';
+        messageElement.style.color = 'red';
+    });
+});
