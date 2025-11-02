@@ -13,5 +13,10 @@
         "username": "testuser",
         "hpass": "56eea4b20ff96f55694e1a752056c1b2988c98042f2c3b790bf7db2a10b4bd91",
         "salt": "2ea11501274f357e44c75fed14fb30d3e17e23329f3a0bb033993b679c9dc9dd"
+    },
+    {
+        "username": "igor3",
+        "hpass": "7f0b923bf6832b96178410640b8f75563d75b3c0de54d2e6fba8d4d20946fed5",
+        "salt": "bbfc4a9735a4cd5f09f4aacb5bd8eb080ea7da03a81253af3b9abd289cf44ed2"
     }
 ]
