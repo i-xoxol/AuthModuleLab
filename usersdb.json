@@ -3,5 +3,10 @@
         "username": "igor",
         "hpass": "25214e93fb8cdec44a77bc18fbbd5e3a37d1a67e47603216c5fc794aa18b1829",
         "salt": "c9f08cb779d14c9711930c70cac26ae1ed0d979ed1ebfcc08bd142492e507e78"
+    },
+    {
+        "username": "igor2",
+        "hpass": "5c85e868e2e203fbea6409df85278f9ca1eb845605ca7b946764423b3b3d69de",
+        "salt": "1aa9d1af238fd1f2c331501f37c646b9dae416b74916f5050310535656a797b1"
     }
 ]
