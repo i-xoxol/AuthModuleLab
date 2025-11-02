@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Assignment: User Authentication</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lab Assignment: User Authentication</h1>
+    <p>
+        This lab is designed to help you understand the principles of user authentication in a software application. 
+        You will be working with a simple Python-based command-line application that demonstrates user registration and login functionalities.
+    </p>
+    <h2>Objectives</h2>
+    <ul>
+        <li>Understand the basic concepts of user authentication.</li>
+        <li>Learn how to implement user registration and login features.</li>
+        <li>Understand the importance of secure password handling (password hashing).</li>
+        <li>Gain experience with reading from and writing to a simple file-based database (JSON).</li>
+    </ul>
+    <h2>Instructions</h2>
+    <p>
+        You are provided with a set of Python files that make up the authentication lab. Your task is to complete the missing code in the `auth.py` file.
+    </p>
+    <ol>
+        <li>
+            <strong>Review the code:</strong> Start by reviewing the provided files:
+            <ul>
+                <li><code>main.py</code>: The main entry point of the application.</li>
+                <li><code>user.py</code>: The User class representing a user.</li>
+                <li><code>user_registration.py</code>: Handles user registration.</li>
+                <li><code>auth.py</code>: <strong>This is the file you will be modifying.</strong> It contains the core authentication logic.</li>
+                <li><code>test_auth.py</code>: Contains unit tests to verify your implementation.</li>
+                <li><code>usersdb.json</code>: A simple JSON file to store user data.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Implement the `login` function in `auth.py`:</strong> Open the `auth.py` file and implement the `login` function. 
+            This function should take a username and password as input, and it should return `True` if the credentials are valid, and `False` otherwise.
+            You will need to:
+            <ul>
+                <li>Read the user data from the `usersdb.json` file.</li>
+                <li>Find the user with the given username.</li>
+                <li>Compare the provided password with the stored hashed password.</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Run the tests:</strong> Once you have implemented the `login` function, run the unit tests in `test_auth.py` to verify your implementation.
+        </li>
+        <li>
+            <strong>Run the application:</strong> Run the `main.py` file to test the application manually.
+        </li>
+    </ol>
+    <h2>Submission</h2>
+    <p>
+        Once you have completed the lab, submit the `auth.py` file.
+    </p>
+</body>
+</html>
