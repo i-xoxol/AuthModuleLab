@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Notes: Secure Development Lab (CY-410)</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            text-align: left;
+        }
+        .container {
+            text-align: left;
+            max-width: 1000px;
+        }
+        details {
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            padding: 15px;
+            background-color: #e9ecef;
+            color: #0056b3;
+        }
+        .talking-points, .whiteboard, .code-snippet, .discussion-answers {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+        .code-snippet code {
+            white-space: pre-wrap;
+            display: block;
+        }
+        .time-marker {
+            font-style: italic;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Instructor Notes: Secure Development Lab (CY-410)</h1>
+        <p><strong>Course:</strong> CY-410 "Software and System Security"</p>
+        <p><strong>Instructor:</strong> Dr. Igor Khokhlov</p>
+        <p><strong>Duration:</strong> 2.5 hours (150 minutes)</p>
+
+        <hr>
+
+        <h2>Part 1: Theoretical Foundation & Real-World Context <span class="time-marker">(30 minutes)</span></h2>
+        
+        <details>
+            <summary><strong>Hook: Real-World Breach Story (5 mins)</strong></summary>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Good morning, everyone. Before we dive into coding, I want to start with a story. The year is 2012. LinkedIn, one of the biggest professional networks, suffers a massive data breach. Over 6.5 million user passwords are stolen and leaked online. The security community quickly discovers a major flaw: the passwords were hashed with SHA-1, which was already known to be weak, but worse... they weren't salted. This meant attackers could use pre-computed 'rainbow tables' to almost instantly reverse the hashes back into plain-text passwords for millions of users."</p>
+                <p>"Ask the class: 'From a developer's point of view, not a network engineer's or a pen-tester's, what was the fundamental failure here?' ... The answer is a failure in the Secure Software Development Lifecycle. The code itself was the vulnerability. That's what today is all about: learning to build software that is secure from the ground up."</p>
+            </div>
+        </details>
+
+        <details>
+            <summary><strong>Lecture: The "Why" (20 mins)</strong></summary>
+            <div class="whiteboard">
+                <h4>On the Whiteboard:</h4>
+                <p>Draw the CIA Triad (triangle with Confidentiality, Integrity, Availability at the points).</p>
+                <p>Draw a simple diagram: `Password -> [HASH] -> Stored Hash`</p>
+                <p>Draw another diagram: `Password + Salt -> [HASH] -> Stored Hash`</p>
+            </div>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"As we build our authentication module today, I want you to think in terms of the CIA Triad. For our lab: <strong>Confidentiality</strong> is about protecting the user's password. <strong>Integrity</strong> is ensuring that the password we check is the one the user provided, and that the user data isn't corrupted. And <strong>Availability</strong> means our login system needs to actually work reliably."</p>
+                <p>"Now, let's talk about the core of password security. We NEVER store plain-text passwords. We hash them. What's the difference between hashing and encryption? (Wait for answers). Encryption is two-way; it's meant to be decrypted. Hashing is a one-way street. You put something in, and you get a unique fingerprint out. You can't go backwards. This is perfect for passwords, because we don't need to know the user's password, we just need to know if the password they just gave us produces the *same fingerprint* as the one we have on file."</p>
+                <p>"But hashing alone isn't enough, as we saw with the LinkedIn breach. That's where salting comes in. (Refer to whiteboard diagram). A salt is just a random string we add to each password *before* we hash it. Why? Imagine two users have the same simple password, 'password123'. Without a salt, their hashes would be identical. If an attacker cracks one, they've cracked both. With a unique salt for each user, their hashes will be completely different, even with the same password. This defeats rainbow table attacks and makes cracking passwords exponentially harder. We will be implementing this today."</p>
+            </div>
+        </details>
+
+        <hr>
+
+        <h2>Part 2: Lab Introduction & Guided Setup <span class="time-marker">(15 minutes)</span></h2>
+        <details>
+            <summary><strong>Lab Overview & Setup (15 mins)</strong></summary>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Alright, let's get our hands dirty. Today, we are security-focused developers. Our goal is to build and, crucially, *verify* a secure authentication module from a skeleton project."</p>
+                <p>"First, let's get the code. Everyone please open a terminal."</p>
+                <p><strong>On Screen:</strong> Show the commands clearly.</p>
+                <div class="code-snippet">
+                    <code>
+# 1. Clone the repository
+git clone https://github.com/i-xoxol/AuthModuleLab.git
+
+# 2. Navigate into the directory
+cd AuthModuleLab
+
+# 3. IMPORTANT: Check out the student branch
+git checkout student-version
+                    </code>
+                </div>
+                <p>"It's very important you check out the `student-version` branch. The `main` branch contains the final, completed code, which you can use as a reference later. The `student-version` is our starting point. This is a common workflow in real development teams."</p>
+                <p>"Now, open the `AuthModuleLab` folder in your favorite code editor. Take a look at the files. You'll see `auth.py`, `user.py`, and `user_registration.py`. This is our core logic. You'll also see `test_*.py` files. These are currently incomplete, and we'll be using them later to prove our code is secure and correct. Finally, open `Lab Assignment.html` in your browser. This will be your interactive guide for the lab."</p>
+            </div>
+        </details>
+
+        <hr>
+
+        <h2>Part 3: Hands-On Lab - Building the Core Logic <span class="time-marker">(60 minutes)</span></h2>
+        <details>
+            <summary><strong>Step 1: Implement Hashing (20 mins)</strong></summary>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Okay, let's start with the most critical security function. Open `auth.py`. You'll see a function called `get_hash` with a `TODO` comment. This is where we'll implement our one-way password hashing."</p>
+                <p>"We'll use Python's built-in `hashlib` library. It provides a variety of hashing algorithms. For our purposes, SHA-256 is a strong and standard choice."</p>
+                <p>"Watch me as I implement it, and then you'll do the same. (Start live-coding). First, we need to encode the input string into bytes, because hash functions operate on bytes, not strings. Then, we pass those bytes to the `sha256` function and call `hexdigest()` to get the readable hexadecimal representation of the hash."</p>
+            </div>
+            <div class="code-snippet">
+                <h4>Code to be written for `get_hash` in `auth.py`:</h4>
+                <code>
+import hashlib
+
+def get_hash(input_string):
+    return hashlib.sha256(input_string.encode()).hexdigest()
+                </code>
+            </div>
+        </details>
+
+        <details>
+            <summary><strong>Step 2: Implement User Search (20 mins)</strong></summary>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Great. Now that we can hash, let's move on to finding users. Still in `auth.py`, find the `find_user` function. Its job is to look through a list of user objects and find one that matches a given username."</p>
+                <p>"A key usability and security consideration here is case-insensitivity. Usernames should be unique regardless of case. So, 'Igor' and 'igor' should be treated as the same user. We'll achieve this by converting both the stored username and the input username to lowercase before comparing them."</p>
+                <p>"I'll code this now. We'll loop through the list, and in each iteration, we do our case-insensitive comparison. If we find a match, we return the user object. If we get through the whole loop without a match, we return `None`."</p>
+            </div>
+            <div class="code-snippet">
+                <h4>Code to be written for `find_user` in `auth.py`:</h4>
+                <code>
+def find_user(user_list, username):
+    for user in user_list:
+        if user.username.lower() == username.lower():
+            return user
+    return None
+                </code>
+            </div>
+        </details>
+
+        <details>
+            <summary><strong>Step 3: Implement User Creation (20 mins)</strong></summary>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Now for the final piece of our core logic. Open `user_registration.py` and find the `create_user` function. This is where we bring everything together to securely create a new user object."</p>
+                <p>"We need to generate a salt, combine it with the password, hash the result, and then create a new `User` object with the username, the final hash, and the salt we used. The salt must be stored with the user, otherwise we'll never be able to check their password again!"</p>
+                <p>"Follow along as I implement this. We'll call the `get_salt` and `bytes_to_hex` functions we already have, and the `get_hash` function you just wrote."</p>
+            </div>
+            <div class="code-snippet">
+                <h4>Code to be written for `create_user` in `user_registration.py`:</h4>
+                <code>
+from auth import get_salt, get_hash, bytes_to_hex
+from user import User
+
+def create_user(username, password):
+    salt = bytes_to_hex(get_salt(32))
+    pass_salt = password + salt
+    hashed_pass = get_hash(pass_salt)
+    return User(username, hashed_pass, salt)
+                </code>
+            </div>
+        </details>
+
+        <hr>
+
+        <h2>Part 4: Hands-On Lab - Verifying with Unit Tests <span class="time-marker">(35 minutes)</span></h2>
+        <details>
+            <summary><strong>The "Why" of Testing & Test Development (30 mins)</strong></summary>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Okay, we've written the code. But are we done? No. How do we prove our code works? And more importantly, how do we prove it's secure and prevent another developer—or our future selves—from accidentally breaking it? The answer is automated testing."</p>
+                <p>"We're going to write unit tests. These are small, focused tests for each piece of our logic. This is our safety net. Let's start with `test_auth.py`."</p>
+                <p>"Find `test_get_hash`. We need to test our hashing function against a known value to ensure its **Integrity**. I have a pre-computed SHA-256 hash for the string 'TEST'. We'll assert that our function produces the exact same hash." (Live-code the test).</p>
+            </div>
+            <div class="code-snippet">
+                <h4>Code for `test_get_hash` in `test_auth.py`:</h4>
+                <code>
+def test_get_hash(self):
+    test_string = "TEST"
+    test_hash = "94ee059335e587e501cc4bf90613e0814f00a7b08bc7c648fd865a2af6a22cc2"
+    hash_result = get_hash(test_string)
+    self.assertEqual(hash_result, test_hash)
+                </code>
+            </div>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Next, `test_find_user`. We need to test two scenarios: finding a user that exists, and failing to find one that doesn't. This prevents bugs where a non-existent user might get authenticated." (Live-code the test).</p>
+            </div>
+            <div class="code-snippet">
+                <h4>Code for `test_find_user` in `test_auth.py`:</h4>
+                <code>
+def test_find_user(self):
+    users = [
+        User("user1", "pass1", "salt1"),
+        User("user2", "pass2", "salt2"),
+    ]
+    found_user = find_user(users, "user2")
+    self.assertIsNotNone(found_user)
+    self.assertEqual(found_user.username, "user2")
+    not_found_user = find_user(users, "user4")
+    self.assertIsNone(not_found_user)
+                </code>
+            </div>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Finally, let's open `test_user_registration.py` and implement `test_create_user`. Here, we're just verifying that the function returns a valid User object with the correct username and that the password and salt fields aren't empty." (Live-code the test).</p>
+            </div>
+            <div class="code-snippet">
+                <h4>Code for `test_create_user` in `test_user_registration.py`:</h4>
+                <code>
+def test_create_user(self):
+    user = create_user("testuser", "testpassword")
+    self.assertEqual(user.username, "testuser")
+    self.assertIsNotNone(user.hpass)
+    self.assertIsNotNone(user.salt)
+                </code>
+            </div>
+        </details>
+
+        <details>
+            <summary><strong>The Moment of Truth: Running the Tests (5 mins)</strong></summary>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Alright, the moment of truth. We've written our code, and we've written our tests. Let's run our entire test suite and see if it passes. In your terminal, at the root of the `AuthModuleLab` directory, run this command."</p>
+            </div>
+            <div class="code-snippet">
+                <code>
+python -m unittest discover
+                </code>
+            </div>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"You should see a series of dots and then 'OK'. That 'OK' is one of the best feelings in development. It means our code is working exactly as we designed it to, and our security logic is verified. We now have a safety net for future changes."</p>
+            </div>
+        </details>
+
+        <hr>
+
+        <h2>Part 5: Discussion & Wrap-Up <span class="time-marker">(10 minutes)</span></h2>
+        <details>
+            <summary><strong>Recap & Discussion (10 mins)</strong></summary>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"So, to recap, we've not only built an authentication module, but we've done it with a security mindset, focusing on hashing, salting, and verifying our work with automated tests. Let's discuss a few things."</p>
+                <p><strong>Discussion Prompts:</strong></p>
+                <ul>
+                    <li>"What are the security limitations of our current implementation?"</li>
+                    <li>"How could we improve the security of this system even further?"</li>
+                    <li>"How did our unit tests specifically contribute to the CIA triad?"</li>
+                </ul>
+            </div>
+            <div class="discussion-answers">
+                <h4>Potential Answers for Instructor Reference:</h4>
+                <ul>
+                    <li><strong>Limitations:</strong> In-memory session store (not persistent, doesn't scale), using a simple JSON file as a database (race conditions, no transactions), no password complexity rules, no protection against brute-force or timing attacks.</li>
+                    <li><strong>Improvements:</strong> Use a database (like SQLite or PostgreSQL), implement password complexity, add rate-limiting to the login endpoint, use a dedicated session management library, implement multi-factor authentication (MFA).</li>
+                    <li><strong>Tests & CIA:</strong> `test_get_hash` ensures **Integrity** of the hashing function. `test_save_load_users` ensures **Availability** of user data. The entire test suite gives us confidence in the **Confidentiality** provided by the hashing/salting mechanism by ensuring it's implemented correctly.</li>
+                </ul>
+            </div>
+            <div class="talking-points">
+                <h4>Script:</h4>
+                <p>"Excellent points. Remember, secure software isn't a destination, it's a continuous process. What we've done today is lay a strong, verifiable foundation. For those interested, you can check out the `main` branch to see this module integrated into a full Flask web application with a front-end."</p>
+            </div>
+        </details>
+
+        <footer>
+            <p>© 2025 Dr. Igor Khokhlov</p>
+        </footer>
+    </div>
+</body>
+</html>
